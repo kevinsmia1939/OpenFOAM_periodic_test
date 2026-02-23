@@ -41,11 +41,8 @@ patches
         name constraint_master;
         patchInfo
         {
-            type cyclicAMI;
+            type cyclic;
             neighbourPatch constraint_slave;
-
-            transform translational;
-            separationVector ( 0.05 0.0 0.0 );
         }
 
         constructFrom patches;
@@ -55,11 +52,8 @@ patches
         name constraint_slave;
         patchInfo
         {
-            type cyclicAMI;
+            type cyclic;
             neighbourPatch constraint_master;
-
-            transform translational;
-            separationVector ( 0.05 0.0 0.0 );
         }
 
         constructFrom patches;

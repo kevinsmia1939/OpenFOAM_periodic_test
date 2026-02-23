@@ -22,12 +22,12 @@ boundaryField
 
     constraint_master
     {
-        type        cyclicAMI;
+        type        cyclic;
     }
 
     constraint_slave
     {
-        type        cyclicAMI;
+        type        cyclic;
     }
 
 

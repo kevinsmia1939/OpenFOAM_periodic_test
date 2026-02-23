@@ -1,51 +1,44 @@
-# Periodic boundary failure analysis (`my_case` vs `periodicHill`)
+# Periodic boundary troubleshooting (`my_case` vs `periodicHill`)
 
-## Root cause found
+## What failed and why
 
-The crash is caused by an incorrect **periodic AMI translation distance**:
+Your latest logs show two separate issues:
 
-- In `my_case`, both periodic patches are configured with
-  `separationVector ( 50.0 0.0 0.0 );`.
-- Your mesh coordinates are in meters around `x = ±0.025` (domain length about `0.05 m`), so the correct translation should be `0.05`, **not 50**.
+1. `meshCase/system/createPatchDict` was malformed/truncated (missing `FoamFile` header), so `createPatch` aborted immediately with a header read error.
+2. In `case`, `cyclicAMI` still failed during parallel `potentialFoam` with zero AMI weights and invalid target bounding box, even after fixing translation distance.
 
-With `50`, AMI attempts to match patches 50 m apart, gets zero overlap (`sum(weights)=0`), then `potentialFoam` later hits a floating-point exception.
+## Why the AMI failure can still happen
 
-## Evidence from your log
+`checkMesh` in serial can report healthy AMI weights, but `potentialFoam -parallel` may still fail if AMI matching is fragile in decomposition/runtime for this specific mesh and patch distribution.
 
-- `AMI: Patch source sum(weights) min:0 max:0 average:0`
-- `AMI: Patch target sum(weights) min:0 max:0 average:0`
-- Bounding-box mismatch warning where target box is invalid/empty.
+For your geometry, the two periodic side patches are planar and corresponding, i.e. this is a conformal periodic pair, so `cyclic` is a better fit than `cyclicAMI`.
 
-These are classic symptoms of wrong `separationVector` (or wrong patch pairing).
+## Implemented fix
 
-## Comparison to `periodicHill`
+To match the `periodicHill` strategy and remove AMI sensitivity, the periodic pair has been switched from `cyclicAMI` to `cyclic`:
 
-- `periodicHill` uses **conformal** periodic boundaries (`cyclic`) in `blockMeshDict`; it does not rely on AMI overlap reconstruction for streamwise periodicity.
-- Your case uses `cyclicAMI`, which is acceptable for non-conformal interfaces, but then the geometric transform must be exact.
+- `my_case/case/system/createPatchDict`
+- `my_case/case/0/U`
+- `my_case/case/0/p`
 
-## Extra warning you can ignore/fix
+Additionally, `my_case/meshCase/system/createPatchDict` has been fully restored with a valid OpenFOAM dictionary header and aligned periodic settings.
 
-`createPatch` warns:
+## Notes on warnings
 
-- `Cannot find any patch or group names matching patch_0_0`
+- `Cannot find any patch ... patch_1_.*`/`patch_2_.*` means patch regex does not match current boundary names at that stage.
+- If that warning appears again, inspect `constant/polyMesh/boundary` before `createPatch` and update regex to exact names.
 
-This comes from the `defaultFaces` block trying to collect a patch that does not exist. It is not the direct crash cause, but it should be cleaned up to avoid confusion.
+## Suggested rerun order
 
-## Changes applied here
+From `case`:
 
-- Updated periodic translation in the runtime case template:
-  - `my_case/case/system/createPatchDict`
-- Replaced `defaultFaces` source selection from `("patch_0_0")` to empty `()` to remove the warning.
+1. `createPatch -overwrite`
+2. `checkMesh -allTopology -allGeometry`
+3. run `./Allrun`
 
-## Suggested next run
+If it still fails, share:
 
-From your case directory:
-
-1. Re-run patch creation and check boundary entries:
-   - `createPatch -overwrite`
-   - verify `constant/polyMesh/boundary` has `separationVector (0.05 0 0)`
-2. Run mesh/boundary quality checks:
-   - `checkMesh -allTopology -allGeometry`
-3. Run your solver workflow again (`Allrun`).
-
-If AMI still reports zero weights, then patch geometry itself is not corresponding (wrong patch IDs selected by regex), and the next step is to inspect the raw patch names in `constant/polyMesh/boundary` *before* `createPatch` and map master/slave from those explicit names.
+- `system/createPatchDict`
+- `0/U`, `0/p`
+- `constant/polyMesh/boundary` right after `createPatch -overwrite`
+- the exact `potentialFoam` command line from `Allrun`
