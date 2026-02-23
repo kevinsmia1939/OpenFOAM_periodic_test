@@ -10,47 +10,43 @@ FoamFile
     version     2.0;
     format      ascii;
     arch        "LSB;label=32;scalar=64";
-    class       polyBoundaryMesh;
-    location    "constant/polyMesh";
-    object      boundary;
+    class       volScalarField;
+    location    "0";
+    object      nuTilda;
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-4
-(
+dimensions      [0 2 -1 0 0 0 0];
+
+internalField   uniform 55;
+
+boundaryField
+{
     wall
     {
-        type            wall;
-        inGroups        1(wall);
-        nFaces          3264;
-        startFace       29600;
+        type            fixedValue;
+        value           uniform 0;
     }
     defaultFaces
     {
-        type            patch;
-        nFaces          0;
-        startFace       32864;
+        type            zeroGradient;
     }
     constraint_master
     {
-        type            cyclic;
-        inGroups        1(cyclic);
-        nFaces          260;
-        startFace       32864;
-        matchTolerance  0.0001;
-        transform       unknown;
-        neighbourPatch  constraint_slave;
+        type            cyclicAMI;
+        value           uniform 55;
     }
     constraint_slave
     {
-        type            cyclic;
-        inGroups        1(cyclic);
-        nFaces          260;
-        startFace       33124;
-        matchTolerance  0.0001;
-        transform       unknown;
-        neighbourPatch  constraint_master;
+        type            cyclicAMI;
+        value           nonuniform List<scalar> 0();
     }
-)
+    procBoundary3to2
+    {
+        type            processor;
+        value           uniform 55;
+    }
+}
+
 
 // ************************************************************************* //

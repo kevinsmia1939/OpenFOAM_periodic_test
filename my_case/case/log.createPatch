@@ -1,0 +1,86 @@
+/*---------------------------------------------------------------------------*\
+| =========                 |                                                 |
+| \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox           |
+|  \\    /   O peration     | Version:  2512                                  |
+|   \\  /    A nd           | Website:  www.openfoam.com                      |
+|    \\/     M anipulation  |                                                 |
+\*---------------------------------------------------------------------------*/
+Build  : _87ed40d2-20251219 OPENFOAM=2512 version=2512
+Arch   : "LSB;label=32;scalar=64"
+Exec   : createPatch -overwrite
+Date   : Feb 23 2026
+Time   : 19:59:08
+Host   : 2a02-1810-3e2f-eb00-8bc9-cae7-addd-2361.ip6.access.telenet.be
+PID    : 11454
+I/O    : uncollated
+Case   : /home/kevin/Desktop/OpenFOAM_periodic_test/my_case/case
+nProcs : 1
+trapFpe: Floating point exception trapping enabled (FOAM_SIGFPE).
+memory pool : not available
+fileModificationChecking : Monitoring run-time modified files using timeStampMaster (fileModificationSkew 5, maxFileModificationPolls 20)
+allowSystemOperations : Allowing user-supplied system call operations
+
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+Create time
+
+Create mesh for time = 0
+
+Reading "system/createPatchDict"
+
+
+
+Adding patches to mesh region0
+
+Adding new patch wall from 
+{
+    type            wall;
+    nFaces          0;
+    startFace       0;
+}
+
+Adding new patch defaultFaces from 
+{
+    type            patch;
+    nFaces          0;
+    startFace       0;
+}
+
+Adding new patch constraint_master from 
+{
+    type            cyclic;
+    neighbourPatch  constraint_slave;
+    nFaces          0;
+    startFace       0;
+}
+
+Adding new patch constraint_slave from 
+{
+    type            cyclic;
+    neighbourPatch  constraint_master;
+    nFaces          0;
+    startFace       0;
+}
+
+
+
+
+Repatching mesh region0
+
+Moving faces from patch patch_3_0 to patch 3
+Moving faces from patch patch_1_0 to patch 5
+Moving faces from patch patch_2_0 to patch 6
+Doing topology modification to order faces.
+
+Not synchronising points.
+
+Removing patches with no faces in them.
+
+Removed zero-sized patch patch_1_0 type wall at position 0
+Removed zero-sized patch patch_2_0 type wall at position 1
+Removed zero-sized patch patch_3_0 type wall at position 2
+
+
+Writing repatched mesh region0 to 0
+
+End
+

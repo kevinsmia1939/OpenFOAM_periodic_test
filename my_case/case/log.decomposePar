@@ -1,0 +1,103 @@
+/*---------------------------------------------------------------------------*\
+| =========                 |                                                 |
+| \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox           |
+|  \\    /   O peration     | Version:  2512                                  |
+|   \\  /    A nd           | Website:  www.openfoam.com                      |
+|    \\/     M anipulation  |                                                 |
+\*---------------------------------------------------------------------------*/
+Build  : _87ed40d2-20251219 OPENFOAM=2512 version=2512
+Arch   : "LSB;label=32;scalar=64"
+Exec   : decomposePar -force
+Date   : Feb 23 2026
+Time   : 19:54:45
+Host   : 2a02-1810-3e2f-eb00-8bc9-cae7-addd-2361.ip6.access.telenet.be
+PID    : 9842
+I/O    : uncollated
+Case   : /home/kevin/Desktop/OpenFOAM_periodic_test/my_case/case
+nProcs : 1
+trapFpe: Floating point exception trapping enabled (FOAM_SIGFPE).
+memory pool : not available
+fileModificationChecking : Monitoring run-time modified files using timeStampMaster (fileModificationSkew 5, maxFileModificationPolls 20)
+allowSystemOperations : Allowing user-supplied system call operations
+
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+Create time
+
+
+
+Decomposing mesh
+
+Create mesh
+
+Calculating distribution of cells
+Decomposition method scotch [4] (region region0)
+
+Finished decomposition in 0.12 s
+
+Calculating original mesh data
+
+Distributing cells to processors
+
+Distributing faces to processors
+
+Distributing points to processors
+
+Constructing processor meshes
+
+Processor 0
+    Number of cells = 2636
+    Number of points = 3260
+    Number of faces shared with processor 1 = 196
+    Number of faces shared with processor 3 = 150
+    Number of processor patches = 2
+    Number of processor faces = 346
+    Number of boundary faces = 844
+
+Processor 1
+    Number of cells = 2628
+    Number of points = 3253
+    Number of faces shared with processor 0 = 196
+    Number of faces shared with processor 2 = 130
+    Number of faces shared with processor 2 = 110
+    Number of processor patches = 3
+    Number of processor faces = 436
+    Number of boundary faces = 788
+
+Processor 2
+    Number of cells = 2629
+    Number of points = 3246
+    Number of faces shared with processor 1 = 130
+    Number of faces shared with processor 1 = 110
+    Number of faces shared with processor 3 = 198
+    Number of processor patches = 3
+    Number of processor faces = 438
+    Number of boundary faces = 788
+
+Processor 3
+    Number of cells = 2635
+    Number of points = 3274
+    Number of faces shared with processor 0 = 150
+    Number of faces shared with processor 2 = 198
+    Number of processor patches = 2
+    Number of processor faces = 348
+    Number of boundary faces = 844
+
+Number of processor faces = 784
+Max number of cells = 2636 (0.151975683890578% above average 2632)
+Max number of processor patches = 3 (20% above average 2.5)
+Max number of faces between processors = 438 (11.734693877551% above average 392)
+
+Time = 0
+
+
+--> FOAM FATAL IO ERROR: (openfoam-2512)
+inconsistent patch and patchField types for
+    patch type cyclic and patchField type cyclicAMI
+
+file: 0/nuTilda/boundaryField/constraint_master at line 25.
+
+    From static Foam::tmp<Foam::fvPatchField<Type> > Foam::fvPatchField<Type>::New(const Foam::fvPatch&, const Foam::DimensionedField<Type, Foam::volMesh>&, const Foam::dictionary&) [with Type = double]
+    in file /home/abuild/rpmbuild/BUILD/openfoam2512-2512.1-build/OpenFOAM-v2512/src/finiteVolume/lnInclude/fvPatchFieldNew.C at line 139.
+
+FOAM exiting
+

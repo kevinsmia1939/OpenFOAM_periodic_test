@@ -16,40 +16,57 @@ FoamFile
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-4
+5
 (
     wall
     {
         type            wall;
         inGroups        1(wall);
-        nFaces          3264;
-        startFace       29600;
+        nFaces          844;
+        startFace       7284;
     }
     defaultFaces
     {
         type            patch;
         nFaces          0;
-        startFace       32864;
+        startFace       8128;
     }
     constraint_master
     {
-        type            cyclic;
-        inGroups        1(cyclic);
-        nFaces          260;
-        startFace       32864;
+        type            cyclicAMI;
+        inGroups        1(cyclicAMI);
+        nFaces          150;
+        startFace       8128;
         matchTolerance  0.0001;
-        transform       unknown;
+        transform       translational;
         neighbourPatch  constraint_slave;
+        separationVector (50 0 0);
+        AMIMethod       faceAreaWeightAMI;
+        restartUncoveredSourceFace 1;
     }
     constraint_slave
     {
-        type            cyclic;
-        inGroups        1(cyclic);
-        nFaces          260;
-        startFace       33124;
+        type            cyclicAMI;
+        inGroups        1(cyclicAMI);
+        nFaces          0;
+        startFace       8278;
+        matchTolerance  0.0001;
+        transform       translational;
+        neighbourPatch  constraint_master;
+        separationVector (50 0 0);
+        AMIMethod       faceAreaWeightAMI;
+        restartUncoveredSourceFace 1;
+    }
+    procBoundary3to2
+    {
+        type            processor;
+        inGroups        1(processor);
+        nFaces          196;
+        startFace       8278;
         matchTolerance  0.0001;
         transform       unknown;
-        neighbourPatch  constraint_master;
+        myProcNo        3;
+        neighbProcNo    2;
     }
 )
 

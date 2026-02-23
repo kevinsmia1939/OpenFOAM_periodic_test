@@ -16,40 +16,68 @@ FoamFile
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-4
+6
 (
     wall
     {
         type            wall;
         inGroups        1(wall);
-        nFaces          3264;
-        startFace       29600;
+        nFaces          788;
+        startFace       7255;
     }
     defaultFaces
     {
         type            patch;
         nFaces          0;
-        startFace       32864;
+        startFace       8043;
     }
     constraint_master
     {
-        type            cyclic;
-        inGroups        1(cyclic);
-        nFaces          260;
-        startFace       32864;
+        type            cyclicAMI;
+        inGroups        1(cyclicAMI);
+        nFaces          110;
+        startFace       8043;
         matchTolerance  0.0001;
-        transform       unknown;
+        transform       translational;
         neighbourPatch  constraint_slave;
+        separationVector (50 0 0);
+        AMIMethod       faceAreaWeightAMI;
+        restartUncoveredSourceFace 1;
     }
     constraint_slave
     {
-        type            cyclic;
-        inGroups        1(cyclic);
-        nFaces          260;
-        startFace       33124;
+        type            cyclicAMI;
+        inGroups        1(cyclicAMI);
+        nFaces          0;
+        startFace       8153;
+        matchTolerance  0.0001;
+        transform       translational;
+        neighbourPatch  constraint_master;
+        separationVector (50 0 0);
+        AMIMethod       faceAreaWeightAMI;
+        restartUncoveredSourceFace 1;
+    }
+    procBoundary2to0
+    {
+        type            processor;
+        inGroups        1(processor);
+        nFaces          130;
+        startFace       8153;
         matchTolerance  0.0001;
         transform       unknown;
-        neighbourPatch  constraint_master;
+        myProcNo        2;
+        neighbProcNo    0;
+    }
+    procBoundary2to3
+    {
+        type            processor;
+        inGroups        1(processor);
+        nFaces          196;
+        startFace       8283;
+        matchTolerance  0.0001;
+        transform       unknown;
+        myProcNo        2;
+        neighbProcNo    3;
     }
 )
 
